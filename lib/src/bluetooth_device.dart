@@ -61,6 +61,16 @@ class BluetoothDevice {
         .invokeMethod('pair', id.toString());
   }
 
+  Future<bool> didPairingStart() async {
+    return (await FlutterBluePlus.instance._channel
+        .invokeMethod('didPairingStart', id.toString())) as bool;
+  }
+
+  Future<bool> didPairingSucceed() async {
+    return (await FlutterBluePlus.instance._channel
+        .invokeMethod('didPairingSucceed', id.toString())) as bool;
+  }
+
   /// Refresh Gatt Device Cache
   /// Emergency method to reload ble services & characteristics
   /// Currently only implemented on Android.
