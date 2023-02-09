@@ -61,14 +61,9 @@ class BluetoothDevice {
         .invokeMethod('pair', id.toString());
   }
 
-  Future<bool> didPairingStart() async {
+  Future<int> getPairingState() async {
     return (await FlutterBluePlus.instance._channel
-        .invokeMethod('didPairingStart', id.toString())) as bool;
-  }
-
-  Future<bool> didPairingSucceed() async {
-    return (await FlutterBluePlus.instance._channel
-        .invokeMethod('didPairingSucceed', id.toString())) as bool;
+        .invokeMethod('getPairingState', id.toString())) as int;
   }
 
   /// Refresh Gatt Device Cache
