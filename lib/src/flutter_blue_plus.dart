@@ -187,6 +187,17 @@ class FlutterBluePlus {
     });
   }
 
+  Future<void> getScanPermission() async {
+    try {
+      await _channel.invokeMethod('getScanPermission');
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error starting scan permissions.');
+      }
+      rethrow;
+    }
+  }
+
   /// Starts a scan and returns a future that will complete once the scan has finished.
   ///
   /// Once a scan is started, call [stopScan] to stop the scan and complete the returned future.
