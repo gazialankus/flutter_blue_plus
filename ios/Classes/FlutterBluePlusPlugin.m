@@ -119,16 +119,20 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
     ProtosConnectRequest *request = [[ProtosConnectRequest alloc] initWithData:[data data] error:nil];
     NSString *remoteId = [request remoteId];
     @try {
-      CBPeripheral *peripheral = [_scannedPeripherals objectForKey:remoteId];
-      if(peripheral == nil) {
-        NSArray *periphs = [self->_centralManager retrieveConnectedPeripheralsWithServices:@[[CBUUID UUIDWithString:@"1800"]]];
-        for (CBPeripheral *p in periphs) {
-          NSString *uuid = [[p identifier] UUIDString];
-          p.delegate = self;
-          [_scannedPeripherals setObject:p forKey:uuid];
+      CBPeripheral *peripheral = _scannedPeripherals[remoteId];
+      if (peripheral == nil) {
+        NSArray *connectedPeripherals = [_centralManager retrieveConnectedPeripheralsWithServices:nil];
+        for (CBPeripheral *p in connectedPeripherals) {
+          if ([p.identifier.UUIDString isEqualToString:remoteId]) {
+            peripheral = p;
+            break;
+          }
         }
-        peripheral = [_scannedPeripherals objectForKey:remoteId];
-        result(nil);
+      }
+      if(peripheral == nil) {
+        @throw [FlutterError errorWithCode:@"connect"
+                                   message:@"Peripheral not found"
+                                   details:nil];
       }
       // TODO: Implement Connect options (#36)
       [_centralManager connectPeripheral:peripheral options:nil];
@@ -136,7 +140,8 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
     } @catch(FlutterError *e) {
       result(e);
     }
-  } else if([@"disconnect" isEqualToString:call.method]) {
+  }
+  else if([@"disconnect" isEqualToString:call.method]) {
     NSString *remoteId = [call arguments];
     @try {
       CBPeripheral *peripheral = [self findPeripheral:remoteId];
