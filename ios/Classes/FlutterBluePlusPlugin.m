@@ -128,11 +128,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
           [_scannedPeripherals setObject:p forKey:uuid];
         }
         peripheral = [_scannedPeripherals objectForKey:remoteId];
-      }
-      if(peripheral == nil) {
-        @throw [FlutterError errorWithCode:@"connect"
-                                   message:@"Peripheral not found"
-                                   details:nil];
+        result(nil);
       }
       // TODO: Implement Connect options (#36)
       [_centralManager connectPeripheral:peripheral options:nil];
