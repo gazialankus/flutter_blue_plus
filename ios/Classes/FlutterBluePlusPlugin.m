@@ -130,6 +130,9 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
         }
       }
       if(peripheral == nil) {
+        NSLog(@"Peripheral not found. Here are scanned peripherals and connected peripherals");
+        NSLog(@"Scanned peripherals: %@", _scannedPeripherals);
+        NSLog(@"Connected peripherals: %@", [_centralManager retrieveConnectedPeripheralsWithServices:nil]);
         @throw [FlutterError errorWithCode:@"connect"
                                    message:@"Peripheral not found"
                                    details:nil];
