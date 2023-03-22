@@ -121,7 +121,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
     @try {
       CBPeripheral *peripheral = _scannedPeripherals[remoteId];
       if (peripheral == nil) {
-        NSArray *connectedPeripherals = [_centralManager retrieveConnectedPeripheralsWithServices:nil];
+        NSArray *connectedPeripherals = [_centralManager retrieveConnectedPeripheralsWithServices:@[[CBUUID UUIDWithString:@"1800"]]];
         for (CBPeripheral *p in connectedPeripherals) {
           if ([p.identifier.UUIDString isEqualToString:remoteId]) {
             peripheral = p;
@@ -132,7 +132,7 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
       if(peripheral == nil) {
         NSLog(@"Peripheral not found. Here are scanned peripherals and connected peripherals");
         NSLog(@"Scanned peripherals: %@", _scannedPeripherals);
-        NSLog(@"Connected peripherals: %@", [_centralManager retrieveConnectedPeripheralsWithServices:nil]);
+        NSLog(@"Connected peripherals: %@", [_centralManager retrieveConnectedPeripheralsWithServices:@[[CBUUID UUIDWithString:@"1800"]]]);
         @throw [FlutterError errorWithCode:@"connect"
                                    message:@"Peripheral not found"
                                    details:nil];
