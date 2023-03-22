@@ -119,32 +119,14 @@ typedef NS_ENUM(NSUInteger, LogLevel) {
     ProtosConnectRequest *request = [[ProtosConnectRequest alloc] initWithData:[data data] error:nil];
     NSString *remoteId = [request remoteId];
     @try {
-      CBPeripheral *peripheral = _scannedPeripherals[remoteId];
-      if (peripheral == nil) {
-        NSArray *connectedPeripherals = [_centralManager retrieveConnectedPeripheralsWithServices:@[[CBUUID UUIDWithString:@"1800"]]];
-        for (CBPeripheral *p in connectedPeripherals) {
-          if ([p.identifier.UUIDString isEqualToString:remoteId]) {
-            peripheral = p;
-            break;
-          }
-        }
-      }
-      if(peripheral == nil) {
-        NSLog(@"Peripheral not found. Here are scanned peripherals and connected peripherals");
-        NSLog(@"Scanned peripherals: %@", _scannedPeripherals);
-        NSLog(@"Connected peripherals: %@", [_centralManager retrieveConnectedPeripheralsWithServices:@[[CBUUID UUIDWithString:@"1800"]]]);
-        @throw [FlutterError errorWithCode:@"connect"
-                                   message:@"Peripheral not found"
-                                   details:nil];
-      }
-      // TODO: Implement Connect options (#36)
+      CBPeripheral *peripheral = [_centralManager retrievePeripheralsWithIdentifiers:@[[[NSUUID alloc] initWithUUIDString:remoteId]]].firstObject;
+        // TODO: Implement Connect options (#36)
       [_centralManager connectPeripheral:peripheral options:nil];
       result(nil);
     } @catch(FlutterError *e) {
       result(e);
     }
-  }
-  else if([@"disconnect" isEqualToString:call.method]) {
+  } else if([@"disconnect" isEqualToString:call.method]) {
     NSString *remoteId = [call arguments];
     @try {
       CBPeripheral *peripheral = [self findPeripheral:remoteId];
